@@ -67,7 +67,7 @@ WORKDIR /usr/src/opencv/build
 RUN cmake \
 	-D CMAKE_BUILD_TYPE=RELEASE \
 	-D CMAKE_C_COMPILER=/usr/bin/clang \
-    -D CMAKE_CXX_COMPILER=/usr/bin/clang++ \
+		-D CMAKE_CXX_COMPILER=/usr/bin/clang++ \
 	-D CMAKE_INSTALL_PREFIX=/usr/local \
 	-D OPENCV_EXTRA_MODULES_PATH=/usr/src/opencv_contrib/modules \
 	-D PYTHON3_LIBRARY=`python -c 'import subprocess ; import sys ; s = subprocess.check_output("python-config --configdir", shell=True).decode("utf-8").strip() ; (M, m) = sys.version_info[:2] ; print("{}/libpython{}.{}.dylib".format(s, M, m))'` \
@@ -88,8 +88,8 @@ RUN make -j4
 RUN make install
 
 # check for install success
-RUN cp -p $(find /usr/local/lib/python3.5/site-packages -name cv2.*.so) \
-	/usr/lib/python3.5/site-packages/cv2.so && \
+RUN cp -p $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
+	/usr/lib/python3.6/site-packages/cv2.so && \
 	python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
 
 # land on opencv directory
