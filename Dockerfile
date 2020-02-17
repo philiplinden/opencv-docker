@@ -88,8 +88,8 @@ RUN make -j$(nproc)
 # install
 RUN make install
 
-# update links
-RUN ldconfig
+# # update links
+# RUN ldconfig /etc/ld.so.conf.d
 
 # # rename the built binaries to generic cv2 package name
 # RUN mv -p $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
@@ -97,8 +97,8 @@ RUN ldconfig
 # # check for successful python import
 # RUN python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
 
-# land on opencv directory
-WORKDIR /usr/src/opencv
+# # land on opencv directory
+# WORKDIR /usr/src/opencv
 
-# cleanup
-RUN rm -rf /usr/src/opencv/build
+# # cleanup
+# RUN rm -rf /usr/src/opencv/build
