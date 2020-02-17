@@ -1,6 +1,14 @@
 # opencv-docker
 
-Docker image of OpenCV 4.2.0 built from Python3.6-alpine ![Docker](https://github.com/philiplinden/opencv-docker/workflows/Docker/badge.svg)
+Docker image of [OpenCV 4.2.0](https://github.com/opencv/opencv/releases/tag/4.2.0) built from [Python3.6-alpine](https://hub.docker.com/_/python) ![Docker](https://github.com/philiplinden/opencv-docker/workflows/Docker/badge.svg)
+
+Also includes:
+
+- [OpenCV Contrib 4.2.0](https://github.com/opencv/opencv_contrib/releases/tag/4.2.0) (`OPENCV_ENABLE_NONFREE=True`)
+- Python 3 examples
+- [NumPy](https://numpy.org/)
+
+For educational use only.
 
 ## Install
 
