@@ -2,83 +2,53 @@ name: Docker
 
 on:
   push:
-    # Publish `master` as Docker `latest` image.
     branches:
       - master
-
-    # Publish `v1.2.3` tags as releases.
     tags:
       - v*
-
-  # Run tests for any PRs.
-  pull_request:
+  schedule:
+    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
 
 env:
-  IMAGE_NAME: opencv
+  VERSION: $(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  test:
+  build:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            # docker build . --file Dockerfile
-            echo "No tests to run. Add tests to docker-compose.test.yml"
-          fi
-
-  # Push image to GitHub Package Registry.
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    needs: test
-
+    run: 
+  update-readme:
+    - name: Update Docker Hub Readme
+      uses: peter-evans/dockerhub-description@v2.1.0
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        DOCKERHUB_REPOSITORY: philiplinden/opencv
+  publish-dockerhub:
+    needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Build image
-        run: docker build . --file Dockerfile --tag image
-      
-      - name: Update version label
-        run: |
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-      - name: Log into GitHub Package Registry
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push image to GitHub Package Registry
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.actor }}/$IMAGE_NAME
-          echo IMAGE_ID=$IMAGE_ID
-
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
-      
-      - name: Log into Docker
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
-
-      - name: Push image to Docker
-        run: |
-          IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
-          echo IMAGE_ID=$IMAGE_ID
-
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+    - uses: actions/checkout@master
+    - name: Publish to DockerHub Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: myDocker/repository
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        cache: ${{ github.event_name != 'schedule' }}
+        registry: docker.com
+        tags: latest, $VERSION
+  publish-github:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to GitHub Package Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: myDocker/repository
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        cache: ${{ github.event_name != 'schedule' }}
+        registry: docker.pkg.github.com
+        tags: latest, $VERSION
+        
