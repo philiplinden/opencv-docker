@@ -1,6 +1,8 @@
 # opencv-docker
 
-Docker image of [OpenCV 4.2.0](https://github.com/opencv/opencv/releases/tag/4.2.0) built from [Python3.6-alpine](https://hub.docker.com/_/python) ![Docker](https://github.com/philiplinden/opencv-docker/workflows/Docker/badge.svg)
+Docker image of [OpenCV 4.2.0](https://github.com/opencv/opencv/releases/tag/4.2.0) built from [Python3.6-alpine](https://hub.docker.com/_/python)
+
+![Docker](https://github.com/philiplinden/opencv-docker/workflows/Docker/badge.svg)
 
 Also includes:
 
@@ -22,6 +24,12 @@ Or pull a specific tagged version (see git tags):
 
 ```bash
 docker pull philiplinden/opencv:tag
+```
+
+Or build it yourself (this will take 2+ hours!):
+
+```bash
+docker build . --file Dockerfile
 ```
 
 ## Usage

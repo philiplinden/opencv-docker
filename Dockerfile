@@ -88,8 +88,8 @@ RUN make -j$(nproc)
 # install
 RUN make install
 
-# # update links
-# RUN ldconfig /etc/ld.so.conf.d
+# update links
+RUN ldconfig /etc/ld.so.conf.d
 
 # # rename the built binaries to generic cv2 package name
 # RUN mv -p $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \

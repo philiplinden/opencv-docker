@@ -31,7 +31,8 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build . --file Dockerfile
+            # docker build . --file Dockerfile
+            echo "No tests to run. Add tests to docker-compose.test.yml"
           fi
 
   # Push image to GitHub Package Registry.
@@ -48,14 +49,9 @@ jobs:
 
       - name: Build image
         run: docker build . --file Dockerfile --tag image
-
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push image
+      
+      - name: Update version label
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
@@ -65,8 +61,24 @@ jobs:
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
 
+      - name: Log into GitHub Package Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push image to GitHub Package Registry
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.actor }}/$IMAGE_NAME
           echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
+
+          docker tag image $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+      
+      - name: Log into Docker
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ github.actor }} --password-stdin
+
+      - name: Push image to Docker
+        run: |
+          IMAGE_ID=${{ github.actor }}/$IMAGE_NAME
+          echo IMAGE_ID=$IMAGE_ID
 
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
