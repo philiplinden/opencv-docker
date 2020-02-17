@@ -82,15 +82,19 @@ RUN cmake \
 	..
 
 # compile (with 4 threads)
-RUN make -j4
+RUN make -j$(nproc)
 
 # install
 RUN make install
 
-# check for install success
-RUN cp -p $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
-	/usr/lib/python3.6/site-packages/cv2.so && \
-	python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
+# update links
+RUN ldconfig
+
+# # rename the built binaries to generic cv2 package name
+# RUN mv -p $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
+# 	/usr/lib/python3.6/site-packages/cv2.so
+# # check for successful python import
+# RUN python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
 
 # land on opencv directory
 WORKDIR /usr/src/opencv
