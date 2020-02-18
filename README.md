@@ -20,7 +20,7 @@ Pull the latest version of the image:
 docker pull philiplinden/opencv:latest
 ```
 
-Or pull a specific tagged version (see git tags):
+Or pull a specific [tagged version](https://github.com/philiplinden/opencv-docker/tags)):
 
 ```bash
 docker pull philiplinden/opencv:tag
