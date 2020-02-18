@@ -1,5 +1,4 @@
 name: Docker
-
 on:
   push:
     branches:
@@ -8,7 +7,6 @@ on:
       - v*
   schedule:
     - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
-
 jobs:
   publish-dockerhub:
     runs-on: ubuntu-latest
@@ -22,7 +20,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         cache: ${{ github.event_name != 'schedule' }} # don't use cache for scheduled builds
         registry: docker.com
-        tags: latest, $(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        tags: latest
   publish-github:
     runs-on: ubuntu-latest
     steps:
@@ -35,5 +33,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         cache: ${{ github.event_name != 'schedule' }}
         registry: docker.pkg.github.com
-        tags: latest, $(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-        
+        tags: latest
