@@ -1,5 +1,4 @@
 name: Update Docker Hub Description
-
 on:
   push:
     branches:
@@ -7,10 +6,6 @@ on:
     paths:
       - README.md
       - .github/workflows/dockerhub-description.yml
-
-env:
-  IMAGE: philiplinden/opencv
-
 jobs:
   update-readme:
     runs-on: ubuntu-latest
@@ -21,4 +16,4 @@ jobs:
       env:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        DOCKERHUB_REPOSITORY: $IMAGE
+        DOCKERHUB_REPOSITORY: philiplinden/opencv
