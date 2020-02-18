@@ -33,7 +33,7 @@ jobs:
     - name: Publish to GitHub Package Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: philiplinden/opencv
+        name: philiplinden/opencv-docker/opencv
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         cache: ${{ github.event_name != 'schedule' }}
