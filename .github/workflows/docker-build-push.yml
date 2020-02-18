@@ -11,27 +11,24 @@ on:
 
 env:
   VERSION: $(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+  IMAGE: philiplinden/opencv
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    run: 
   update-readme:
     - name: Update Docker Hub Readme
       uses: peter-evans/dockerhub-description@v2.1.0
       env:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        DOCKERHUB_REPOSITORY: philiplinden/opencv
+        DOCKERHUB_REPOSITORY: $IMAGE
   publish-dockerhub:
-    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: Publish to DockerHub Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: myDocker/repository
+        name: $IMAGE
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         cache: ${{ github.event_name != 'schedule' }}
@@ -45,7 +42,7 @@ jobs:
     - name: Publish to GitHub Package Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: myDocker/repository
+        name: $IMAGE
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         cache: ${{ github.event_name != 'schedule' }}
