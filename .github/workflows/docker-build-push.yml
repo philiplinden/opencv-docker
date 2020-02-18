@@ -22,7 +22,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         cache: ${{ github.event_name != 'schedule' }} # don't use cache for scheduled builds
-        registry: docker.com
         tags: latest, ${{ steps.get_version.outputs.VERSION }}
   publish-github:
     runs-on: ubuntu-latest
