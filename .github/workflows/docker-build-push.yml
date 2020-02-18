@@ -17,7 +17,7 @@ jobs:
   publish-dockerhub:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@V2
+    - uses: actions/checkout@v2
     - name: Publish to DockerHub Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -30,7 +30,7 @@ jobs:
   publish-github:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@V2
+    - uses: actions/checkout@v2
     - name: Publish to GitHub Package Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
