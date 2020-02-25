@@ -48,7 +48,7 @@ For example,
 
 ```bash
 # run the container and mount the local directory with the container
-docker run --name opencv philiplinden/opencv -v $(pwd):/usr/src/opencv -it
+docker run -v $(pwd):/usr/src/opencv -dit --name opencv philiplinden/opencv
 
 # open an interactive bash terminal on the running container
 docker exec -it opencv bash
