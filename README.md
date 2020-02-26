@@ -20,7 +20,7 @@ Pull the latest version of the image:
 docker pull philiplinden/opencv:latest
 ```
 
-Or pull a specific [tagged version](https://github.com/philiplinden/opencv-docker/tags)):
+Or pull a specific [tagged version](https://github.com/philiplinden/opencv-docker/tags):
 
 ```bash
 docker pull philiplinden/opencv:tag
@@ -37,18 +37,11 @@ docker build . --file Dockerfile
 Run the image:
 
 ```bash
-# run the image (with options)
-docker run --name opencv philiplinden/opencv -v /host/directory:/container/directory --other --options command_to_run
+# run the image and mount the local directory
+docker run -dit -v $(pwd):/usr/src/project --name opencv philiplinden/opencv
 
 # check if the container is running
 docker ps | grep opencv
-```
-
-For example,
-
-```bash
-# run the container and mount the local directory with the container
-docker run -v $(pwd):/usr/src/opencv -dit --name opencv philiplinden/opencv
 
 # open an interactive bash terminal on the running container
 docker exec -it opencv bash
