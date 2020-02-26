@@ -98,7 +98,7 @@ RUN mv $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
 RUN python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
 
 # land on a generic project directory
-WORKDIR /usr/src/opencv
+WORKDIR /usr/src/project
 
 # cleanup
 RUN rm -rf /usr/src/opencv/build
