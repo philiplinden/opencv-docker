@@ -91,9 +91,6 @@ RUN make install
 # update links
 RUN ldconfig /etc/ld.so.conf.d
 
-# rename the built binaries to generic cv2 package name
-RUN mv $(find /usr/local/lib/python3.6/site-packages -name cv2.*.so) \
-	/usr/local/lib/python3.6/site-packages/cv2.so
 # check for successful python import
 RUN python -c 'import cv2; print("Python: import cv2 - SUCCESS")'
 
